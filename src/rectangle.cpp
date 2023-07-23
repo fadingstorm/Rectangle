@@ -1,6 +1,5 @@
 #include "rectangle.hpp"
 #include "avgColor.hpp"
-#include <iostream>
 
 void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt19937& generator, unsigned int times) {
     for (size_t i {}; i < times; i++) {
