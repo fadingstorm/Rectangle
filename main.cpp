@@ -19,7 +19,7 @@ int main() {
 
     cv::Mat generatedImage(imageHeight, imageWidth, CV_8UC3, backgroundColor);
 
-    createRectangles(generatedImage, TARGET_IMAGE, gen, 1000);
+    createRectangles(generatedImage, TARGET_IMAGE, gen, 100);
 
     cv::waitKey(0);
     cv::destroyAllWindows();

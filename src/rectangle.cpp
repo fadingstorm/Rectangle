@@ -1,7 +1,25 @@
 #include "rectangle.hpp"
 #include "avgColor.hpp"
 
+// One generation
 void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt19937& generator, unsigned int times) {
+    cv::Mat targetImage {cv::imread(targetImagePath)};
+
+    std::vector<double> rectangleScores;
+
+    // The vector containing the information of every rectangle generated
+    std::vector<std::vector<int>> rectangleInfo;
+    /*
+        [0] will be the upper left corner (y coord)
+        [1] will be the upper left corner (x coord)
+        [2] will be the height
+        [3] will be the width
+
+        [4] will be the BLUE value
+        [5] will be the GREEN value
+        [6] will be the RED value
+    */
+
     for (size_t i {}; i < times; i++) {
         
         // The top left corner of the rectangle
@@ -36,7 +54,18 @@ void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt
             }
         }
 
+        double difference {calculateDifference(image, targetImage)};
 
-        cv::imshow("Generated Image", image);
+        int blue {static_cast<int>(avgColorInArea[0] + 0.5)};
+        int green {static_cast<int>(avgColorInArea[1] + 0.5)};
+        int red {static_cast<int>(avgColorInArea[2] + 0.5)};
+
+
+        std::vector<int> currentRectangleInfo = {rectangleCornerY, rectangleCornerX, rectangleHeight, rectangleWidth, blue, green, red};
+
+        rectangleScores.push_back(difference);
+        rectangleInfo.push_back(currentRectangleInfo);
+
     }
+    cv::imshow("Generated Image", image);
 }
