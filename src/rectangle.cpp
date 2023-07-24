@@ -2,8 +2,7 @@
 #include "avgColor.hpp"
 
 // One generation
-void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt19937& generator, unsigned int times) {
-    cv::Mat targetImage {cv::imread(targetImagePath)};
+void createRectangles(cv::Mat& image, const cv::Mat targetImage, std::mt19937& generator, unsigned int times) {
 
     std::vector<double> rectangleScores;
 
@@ -20,13 +19,16 @@ void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt
         [6] will be the RED value
     */
 
+    // The top left corner of the rectangle
+    int yLow {0};
+    int yHigh {image.rows - 1};
+    int xLow {0};
+    int xHigh {image.cols - 1};
+
+    // Calculate difference...
+    double difference {calculateDifference(image, targetImage)};
+    
     for (size_t i {}; i < times; i++) {
-        
-        // The top left corner of the rectangle
-        int yLow {0};
-        int yHigh {image.rows - 1};
-        int xLow {0};
-        int xHigh {image.cols - 1};
         
         std::uniform_int_distribution<int> yCornerGen(yLow, yHigh);
         std::uniform_int_distribution<int> xCornerGen(xLow, xHigh);
@@ -41,20 +43,7 @@ void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt
         int rectangleHeight {yDim(generator)};
         int rectangleWidth {xDim(generator)};
 
-        cv::Scalar avgColorInArea {calcAvgColorInArea(targetImagePath, rectangleCornerY, rectangleCornerX, rectangleWidth, rectangleHeight)};
-
-        for (int y {rectangleCornerY}; y < (rectangleCornerY + rectangleHeight); y++) {
-            for (int x {rectangleCornerX}; x < (rectangleCornerX + rectangleWidth); x++) {
-                cv::Vec3b& pixel = image.at<cv::Vec3b>(y, x);
-
-                // change each pixel in the box
-                pixel[0] = avgColorInArea[0];
-                pixel[1] = avgColorInArea[1];
-                pixel[2] = avgColorInArea[2];
-            }
-        }
-
-        double difference {calculateDifference(image, targetImage)};
+        cv::Scalar avgColorInArea {calcAvgColorInArea(targetImage, rectangleCornerY, rectangleCornerX, rectangleWidth, rectangleHeight)};
 
         int blue {static_cast<int>(avgColorInArea[0] + 0.5)};
         int green {static_cast<int>(avgColorInArea[1] + 0.5)};
@@ -65,7 +54,34 @@ void createRectangles(cv::Mat& image, const std::string targetImagePath, std::mt
 
         rectangleScores.push_back(difference);
         rectangleInfo.push_back(currentRectangleInfo);
-
     }
-    cv::imshow("Generated Image", image);
+    
+    size_t bestFit {0}; // The index of the best score
+        
+    for (size_t i = 1; i < rectangleScores.size(); ++i) { // Find the index of the rectangle with the lowest score
+        if (rectangleScores[i] < bestFit) {
+            bestFit = i;
+        }
+    }
+    std::vector<int> bestRectangle {rectangleInfo[bestFit]};
+
+    int bestCornerY {bestRectangle[0]};
+    int bestCornerX {bestRectangle[1]};
+    int bestHeight {bestRectangle[2]};
+    int bestWidth {bestRectangle[3]};
+
+    int bestBlue {bestRectangle[4]};
+    int bestGreen {bestRectangle[5]};
+    int bestRed {bestRectangle[6]};
+
+    for (int y {bestCornerY}; y < (bestCornerY + bestHeight); y++) {
+        for (int x {bestCornerX}; x < (bestCornerX + bestWidth); x++) {
+            cv::Vec3b& pixel = image.at<cv::Vec3b>(y, x);
+
+            // change each pixel in the box
+            pixel[0] = bestBlue;
+            pixel[1] = bestGreen;
+            pixel[2] = bestRed;
+        }
+    }
 }

@@ -27,8 +27,7 @@ cv::Scalar calcAvgColor(std::string imagePath) {
 }
 
 // cornerY and cornerX is the TOP LEFT corner of the box
-cv::Scalar calcAvgColorInArea(const std::string imagePath, int cornerY, int cornerX, int width, int height) {
-    cv::Mat image {cv::imread(imagePath)};
+cv::Scalar calcAvgColorInArea(const cv::Mat image, int cornerY, int cornerX, int width, int height) {
 
     int pixels {width * height};
 
