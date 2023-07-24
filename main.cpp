@@ -4,13 +4,22 @@
 #include "rectangle.hpp"
 
 int main() {
-    const std::string TARGET_IMAGE {"/Users/garethmcclellan/Documents/Rectangle/images/target.jpg"};
+    const std::string TARGET_IMAGE {"/Users/garethmcclellan/Documents/Rectangle/images/target.JPG"};
 
     // seed the randomness
     std::random_device rd;
     std::mt19937 gen(rd());
 
     cv::Mat image = cv::imread(TARGET_IMAGE, cv::IMREAD_COLOR);
+
+    // Downscale the image if needed
+    // Ensure that it is at least 1080p
+    int targetWidth = 1920;
+    int targetHeight = 1080;
+    if (image.cols > targetWidth || image.rows > targetHeight) {
+        double scale = std::min(static_cast<double>(targetWidth) / image.cols, static_cast<double>(targetHeight) / image.rows);
+        cv::resize(image, image, cv::Size(), scale, scale);
+    }
 
     int imageWidth = image.cols;
     int imageHeight = image.rows;
@@ -21,9 +30,15 @@ int main() {
 
     for (size_t i {}; i < 500; i++) {
         std::cout << "Shape " << i + 1 << " of " << "500" << std::endl;
-        createRectangles(generatedImage, image, gen, 20);
+        createRectangles(generatedImage, image, gen, 200);
+        
+        cv::imshow("Generated Image", generatedImage);
+        int key = cv::waitKey(50);
+        if (key == 'q')
+            break;
+
     }
-    cv::imshow("Generated Image", generatedImage);
+    
     std::cout << "DONE!!!" << std::endl;
     
 
