@@ -1,7 +1,7 @@
 #include "utils.hpp"
 
 // Lower score is better
-double calculateDifference(cv::Mat image1, cv::Mat image2) {
+double calculateDifference(cv::Mat& image1, cv::Mat& image2) {
     int height {image1.rows};
     int width {image1.cols};
     double score {0.0};

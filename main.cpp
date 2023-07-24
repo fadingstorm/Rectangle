@@ -19,14 +19,12 @@ int main() {
 
     cv::Mat generatedImage(imageHeight, imageWidth, CV_8UC3, backgroundColor);
 
-    for (size_t i {}; i < 20; i++) {
-        cv::Mat generatedImageCopy = generatedImage.clone();
-        createRectangles(generatedImageCopy, image, gen, 100);
-        std::cout << generatedImageCopy.at<cv::Vec3b>(0, 0) << std::endl;
+    for (size_t i {}; i < 500; i++) {
+        std::cout << "Shape " << i + 1 << " of " << "500" << std::endl;
+        createRectangles(generatedImage, image, gen, 20);
     }
-    std::cout << "DONE!!!" << std::endl;
-
     cv::imshow("Generated Image", generatedImage);
+    std::cout << "DONE!!!" << std::endl;
     
 
     cv::waitKey(0);

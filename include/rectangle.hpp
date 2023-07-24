@@ -4,4 +4,4 @@
 #include <vector>
 #include "utils.hpp"
 
-void createRectangles(cv::Mat& image, const cv::Mat targetImage, std::mt19937& generator, unsigned int times);
+void createRectangles(cv::Mat& image, cv::Mat& targetImage, std::mt19937& generator, unsigned int times);

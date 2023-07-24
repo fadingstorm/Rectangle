@@ -1,8 +1,9 @@
 #include "rectangle.hpp"
+#include <iostream>
 #include "avgColor.hpp"
 
 // One generation
-void createRectangles(cv::Mat& image, const cv::Mat targetImage, std::mt19937& generator, unsigned int times) {
+void createRectangles(cv::Mat& image, cv::Mat& targetImage, std::mt19937& generator, unsigned int times) {
 
     std::vector<double> rectangleScores;
 

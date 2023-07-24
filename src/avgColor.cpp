@@ -27,7 +27,7 @@ cv::Scalar calcAvgColor(std::string imagePath) {
 }
 
 // cornerY and cornerX is the TOP LEFT corner of the box
-cv::Scalar calcAvgColorInArea(const cv::Mat image, int cornerY, int cornerX, int width, int height) {
+cv::Scalar calcAvgColorInArea(cv::Mat& image, int cornerY, int cornerX, int width, int height) {
 
     int pixels {width * height};
 
@@ -35,12 +35,18 @@ cv::Scalar calcAvgColorInArea(const cv::Mat image, int cornerY, int cornerX, int
 
     // Get all the Blue, Green, and Red values of the image
     for (int y {cornerY}; y < (cornerY + height); y++) {
-        for (int x {cornerX}; x < (cornerX + width); x++) {
-            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
-            blueTotal += pixel[0];
-            greenTotal += pixel[1];
-            redTotal += pixel[2];
+        if (cornerY + height <= image.rows - 1) {
+            for (int x {cornerX}; x < (cornerX + width); x++) {
+                if (cornerX + width <= image.cols - 1) {
+                    cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+                    blueTotal += pixel[0];
+                    greenTotal += pixel[1];
+                    redTotal += pixel[2];
+                }
+
+            }
         }
+
     }
 
     int blueAvg {blueTotal / pixels};
