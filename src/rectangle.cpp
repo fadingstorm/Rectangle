@@ -22,17 +22,17 @@ void createRectangles(cv::Mat& image, cv::Mat& targetImage, std::mt19937& genera
 
     // The top left corner of the rectangle
     int yLow {0};
-    int yHigh {image.rows - 1};
+    int yHigh {image.rows};
     int xLow {0};
-    int xHigh {image.cols - 1};
+    int xHigh {image.cols};
 
     // Calculate difference...
-    double difference {calculateDifference(image, targetImage)};
+    double prevGenerationDifference {calculateDifference(image, targetImage)};
     
     for (size_t i {}; i < times; i++) {
         
-        std::uniform_int_distribution<int> yCornerGen(yLow, yHigh);
-        std::uniform_int_distribution<int> xCornerGen(xLow, xHigh);
+        std::uniform_int_distribution<int> yCornerGen(yLow, yHigh - 1);
+        std::uniform_int_distribution<int> xCornerGen(xLow, xHigh - 1);
 
         int rectangleCornerY {yCornerGen(generator)};
         int rectangleCornerX {xCornerGen(generator)};
@@ -50,17 +50,31 @@ void createRectangles(cv::Mat& image, cv::Mat& targetImage, std::mt19937& genera
         int green {static_cast<int>(avgColorInArea[1] + 0.5)};
         int red {static_cast<int>(avgColorInArea[2] + 0.5)};
 
+        cv::Mat tempImage {image.clone()}; // Creates a temporary image that will have the created rectangle
+        for (int y {rectangleCornerY}; y < (rectangleCornerY + rectangleHeight - 1); y++) {
+            for (int x {rectangleCornerX}; x < (rectangleCornerX + rectangleWidth - 1); x++) {
+                cv::Vec3b& pixel = tempImage.at<cv::Vec3b>(y, x);
 
+                // change each pixel in the box
+                pixel[0] = blue;
+                pixel[1] = green;
+                pixel[2] = red;
+            }
+        }
+
+        double difference {calculateDifference(tempImage, targetImage)};
         std::vector<int> currentRectangleInfo = {rectangleCornerY, rectangleCornerX, rectangleHeight, rectangleWidth, blue, green, red};
 
         rectangleScores.push_back(difference);
         rectangleInfo.push_back(currentRectangleInfo);
+
+        tempImage.release();
     }
     
     size_t bestFit {0}; // The index of the best score
         
-    for (size_t i = 1; i < rectangleScores.size(); ++i) { // Find the index of the rectangle with the lowest score
-        if (rectangleScores[i] < bestFit) {
+    for (size_t i = 1; i < rectangleScores.size(); i++) { // Find the index of the rectangle with the lowest score
+        if (rectangleScores[i] < rectangleScores[bestFit]) {
             bestFit = i;
         }
     }

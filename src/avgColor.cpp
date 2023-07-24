@@ -35,16 +35,11 @@ cv::Scalar calcAvgColorInArea(cv::Mat& image, int cornerY, int cornerX, int widt
 
     // Get all the Blue, Green, and Red values of the image
     for (int y {cornerY}; y < (cornerY + height); y++) {
-        if (cornerY + height <= image.rows - 1) {
-            for (int x {cornerX}; x < (cornerX + width); x++) {
-                if (cornerX + width <= image.cols - 1) {
-                    cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
-                    blueTotal += pixel[0];
-                    greenTotal += pixel[1];
-                    redTotal += pixel[2];
-                }
-
-            }
+        for (int x {cornerX}; x < (cornerX + width); x++) {
+            cv::Vec3b& pixel = image.at<cv::Vec3b>(y, x);
+            blueTotal += pixel[0];
+            greenTotal += pixel[1];
+            redTotal += pixel[2];
         }
 
     }
