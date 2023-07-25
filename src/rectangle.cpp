@@ -27,7 +27,9 @@ void createRectangles(cv::Mat& image, cv::Mat& targetImage, std::mt19937& genera
     int xHigh {image.cols};
 
     // Calculate difference...
-    double prevGenerationDifference {calculateDifference(image, targetImage)};
+    // double prevGenerationDifference {calculateDifference(image, targetImage)};
+
+    cv::Mat tempImage;
     
     for (size_t i {}; i < times; i++) {
         
@@ -50,7 +52,7 @@ void createRectangles(cv::Mat& image, cv::Mat& targetImage, std::mt19937& genera
         int green {static_cast<int>(avgColorInArea[1] + 0.5)};
         int red {static_cast<int>(avgColorInArea[2] + 0.5)};
 
-        cv::Mat tempImage {image.clone()}; // Creates a temporary image that will have the created rectangle
+        tempImage = image.clone(); // Creates a temporary image that will have the created rectangle
         for (int y {rectangleCornerY}; y < (rectangleCornerY + rectangleHeight - 1); y++) {
             for (int x {rectangleCornerX}; x < (rectangleCornerX + rectangleWidth - 1); x++) {
                 cv::Vec3b& pixel = tempImage.at<cv::Vec3b>(y, x);

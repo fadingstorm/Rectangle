@@ -4,7 +4,7 @@
 #include "rectangle.hpp"
 
 int main() {
-    const std::string TARGET_IMAGE {"/Users/garethmcclellan/Documents/Rectangle/images/target.JPG"};
+    const std::string TARGET_IMAGE {"/Users/garethmcclellan/Documents/Rectangle/images/D56A4136-B8CD-41A5-A964-6F0554607FC3.jpg"};
 
     // seed the randomness
     std::random_device rd;
@@ -28,8 +28,8 @@ int main() {
 
     cv::Mat generatedImage(imageHeight, imageWidth, CV_8UC3, backgroundColor);
 
-    for (size_t i {}; i < 500; i++) {
-        std::cout << "Shape " << i + 1 << " of " << "500" << std::endl;
+    for (size_t i {}; i < 1000; i++) {
+        std::cout << "Shape " << i + 1 << " of " << "1000" << std::endl;
         createRectangles(generatedImage, image, gen, 200);
         
         cv::imshow("Generated Image", generatedImage);
