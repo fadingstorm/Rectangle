@@ -4,7 +4,7 @@
 #include "rectangle.hpp"
 
 int main() {
-    const std::string TARGET_IMAGE {"/Users/garethmcclellan/Documents/Rectangle/images/D56A4136-B8CD-41A5-A964-6F0554607FC3.jpg"};
+    const std::string TARGET_IMAGE {"/Users/garethmcclellan/Documents/Rectangle/images/target.JPG"};
 
     // seed the randomness
     std::random_device rd;
